@@ -1,0 +1,24 @@
+version: 0.2
+phases:
+  install:
+    commands:
+  pre_build:
+    commands:
+      - echo Installing cfg-nag
+  build:
+    commands:
+      - echo Testing CF Template
+      - aws cloudformation validate-template --template-body file:///Users/ganeshbabu/Downloads/cloudformation/cicd/test1.yaml --profile cf_course
+      - /usr/local/bin/cfn_nag_scan --input-path /Users/ganeshbabu/Downloads/cloudformation/cicd/test1.yaml
+      - aws cloudformation create-change-set --stack-name cf-test --template-body file:///Users/ganeshbabu/Downloads/cloudformation/cicd/test1.yaml  --change-set-name cf-test-changeset --parameters ParameterKey=KeyName,ParameterValue=EC2Bill
+post_build:
+    commands:
+      - echo "Codebuild source is:"
+      - echo $CODEBUILD_SOURCE_VERSION
+      - TAG=$(echo $CODEBUILD_SOURCE_VERSION | head -c 8)
+
+
+artifacts:
+  type: zip
+  files:
+    - test1.yaml
