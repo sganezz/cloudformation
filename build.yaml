@@ -5,12 +5,13 @@ phases:
   pre_build:
     commands:
       - echo Installing cfg-nag
+      - gem install cfn-nag
   build:
     commands:
       - echo Testing CF Template
-      - aws cloudformation validate-template --template-body file:///Users/ganeshbabu/Downloads/cloudformation/cicd/test1.yaml --profile cf_course
-      - /usr/local/bin/cfn_nag_scan --input-path /Users/ganeshbabu/Downloads/cloudformation/cicd/test1.yaml
-      - aws cloudformation create-change-set --stack-name cf-test --template-body file:///Users/ganeshbabu/Downloads/cloudformation/cicd/test1.yaml  --change-set-name cf-test-changeset --parameters ParameterKey=KeyName,ParameterValue=EC2Bill
+      - aws cloudformation validate-template --template-body file://test1.yaml
+      - cfn_nag_scan --input-path test1.yaml
+      - aws cloudformation create-change-set --stack-name cf-test --template-body file://test1.yaml  --change-set-name cf-test-changeset --parameters ParameterKey=KeyName,ParameterValue=EC2Bill
 post_build:
     commands:
       - echo "Codebuild source is:"
